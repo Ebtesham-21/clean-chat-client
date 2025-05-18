@@ -1,9 +1,15 @@
 import React from 'react'
 
-const index = () => {
+const Register = () => {
   return (
-    <div>index</div>
+   <form className='space-y-4'>
+        <label className='block text-sm font-medium text-gray-700 '>User Name</label>
+        <input type="text" placeholder='' className='w-full bg-yellow-400 p-3 rounded-md focus:outline-none'/>
+       
+       
+      
+   </form>
   )
 }
 
-export default index
+export default Register
