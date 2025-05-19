@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Sidebar from "./ui/sidebar";
+import Users from "./ui/users";
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
                   <Sidebar/>
               </div>
               <div className="w-[30%] h-[95vh]    flex justify-center">
-                  user List
+                  <Users/>
               </div>
               <div className="w-100% h-[95vh] flex justify-center">
                   chat

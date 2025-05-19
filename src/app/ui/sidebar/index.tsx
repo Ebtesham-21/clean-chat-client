@@ -7,11 +7,11 @@ const Sidebar = () => {
             <div>
                 <div className='p-[20px] pt-[10px]  '>
                     <div className='flex flex-col items-center  justify-center'>
-                        <p>H</p>
+                        <p className='h-10 w-10 items-center justify-center flex bg-blue-500 rounded-full text-white mr-3'>H</p>
                     </div>
                 </div>
             </div>
-            <div className='flex items-center justify-center mt-3 cursor-pointer'>
+            <div className='flex items-center justify-center mb-3 cursor-pointer'>
                 <LogoutButton width="40" height="40"  color = 'blue'/>
 
             </div>
