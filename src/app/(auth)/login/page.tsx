@@ -1,5 +1,6 @@
 import React from 'react';
 import Login from '@/app/ui/login/page';
+import Link from 'next/link';
 
 const page = () => {
   return (
@@ -8,6 +9,12 @@ const page = () => {
                
                     <h2 className='text-2xl font-bold text-center text-primary'>Create your account</h2>
                     <Login/>
+                    <p className='text-center'>
+                     Don't have an account ? { ' '}
+                    <Link href="/register" className='text-indigo-500 hover:underline'>
+                     Register
+                    </Link>
+                    </p>
              
               
         </div>
