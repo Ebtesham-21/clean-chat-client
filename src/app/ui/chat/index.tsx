@@ -8,7 +8,7 @@ const Chat = () => {
   };
 
   return (
-    <div className='w-[90%] h-[80vh] bg-white shadow-md shadow-[#79c5ef] flex flex-col'>
+    <div className='w-[90%] h-[80vh] rounded-lg shadow-md shadow-[#79c5ef] flex flex-col'>
       {/* Header */}
       <div className='flex items-center p-4 bg-gray-100 border-b border-gray-300'>
         {user?.profileImage ? (
@@ -42,12 +42,12 @@ const Chat = () => {
       <div className='p-4 bg-white border-t border-gray-300'>
         <form className='flex items-center space-x-2'>
           <input
-            className='flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
+            className='flex-1 rounded-md focus:outline-none'
             placeholder='Type a message...'
           />
           <button
             type='submit'
-            className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'
+            className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'
           >
             Send
           </button>

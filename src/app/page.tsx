@@ -14,7 +14,7 @@ export default function Home() {
               <div className="w-[30%] h-[95vh]    flex justify-center">
                   <Users/>
               </div>
-              <div className="w-[100%] h-[95vh] items-center flex justify-center">
+              <div className="w-[100%] h-[90vh] items-center flex justify-center">
                   <Chat/>
               </div>
 
