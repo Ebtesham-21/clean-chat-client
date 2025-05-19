@@ -7,14 +7,14 @@ export default function Home() {
   return (
     <div >
       <div className="p-[20px]">
-          <div className="flex">
+          <div className="flex p-3">
               <div className="w-[20%]  flex justify-center">
                   <Sidebar/>
               </div>
               <div className="w-[30%] h-[95vh]    flex justify-center">
                   <Users/>
               </div>
-              <div className="w-100% h-[95vh] flex justify-center">
+              <div className="w-[100%] h-[95vh] items-center flex justify-center">
                   <Chat/>
               </div>
 
