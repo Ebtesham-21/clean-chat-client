@@ -1,6 +1,8 @@
+
 import React from 'react';
 import Register from '@/app/ui/register';
 import Link from 'next/link';
+
 
 const page = () => {
   return (
