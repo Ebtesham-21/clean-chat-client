@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import {useForm} from "react-hook-form";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '@/lib/api';
 import {UserData} from '../../../types';
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ const {
 
   const onSubmit = async(data:UserData) => {
     try{
-        console.log(data, "data");
+    
         const result = await login(data).unwrap();
         localStorage.setItem("token", result.token);
         dipatch(setUser(result.user));
