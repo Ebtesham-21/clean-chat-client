@@ -1,20 +1,41 @@
 "use client";
-import React from 'react';
+import React, { use } from 'react';
 import {useForm } from 'react-hook-form';
 import {UserData} from './../../../types';
 import {useRouter} from "next/navigation";
 const Register = () => {
     const router = useRouter();
+    const [signup, {isLoading}]=useSignupMutation();
     const {
         register,
         handleSubmit,
         watch,
+        reset,
         formState: {errors},
     } = useForm();
 
     const onSubmit = async(data:UserData) => {
-        console.log(data, "data");
-        // router.push("/login");
+        console.log(data, "user DATA");
+        try{
+            const formData = new FormData();
+        if(data.name&&data.password&&data.email&&data.profileImage) {
+            formData.append("name", data.name);
+            formData.append("email", data.email);
+            formData.append("password", data.password);
+            formData.append("profileImage", data.profileImage);
+          
+        }
+
+        await signup(formData).unwrap();
+        reset();
+        router.push("/login");
+        } catch(error:any){
+            alert(error?.data?.message || "Registration Failed" )
+
+        };
+        
+
+
 
         
     }
