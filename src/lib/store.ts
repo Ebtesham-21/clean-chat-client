@@ -1,7 +1,7 @@
 import userReducer from "./features/userSlice";
 import {configureStore} from "@reduxjs/toolkit";
 import { chatApi } from "./api";
-export const store = configureStore({
+export const Store = configureStore({
     reducer: {
         [chatApi.reducerPath]: chatApi.reducer,
         user: userReducer,
@@ -14,5 +14,5 @@ export const store = configureStore({
 
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof Store.getState>;
+export type AppDispatch = typeof Store.dispatch;

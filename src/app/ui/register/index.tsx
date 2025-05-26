@@ -3,6 +3,7 @@ import React, { use } from 'react';
 import {useForm } from 'react-hook-form';
 import {UserData} from './../../../types';
 import {useRouter} from "next/navigation";
+import { useSignupMutation } from '@/lib/api';
 const Register = () => {
     const router = useRouter();
     const [signup, {isLoading}]=useSignupMutation();
