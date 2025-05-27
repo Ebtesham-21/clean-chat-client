@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useFetchUserQuery, useFetchUsersQuery } from '@/lib/api';
 import {io, Socket} from 'socket.io-client';
+import { set } from 'react-hook-form';
 
 export default function Home() {
     useFetchUserQuery("");
@@ -19,6 +20,7 @@ export default function Home() {
     const {users, user} = usersState;
     const [chatUser, setChatUser ] = useState(users[0]);
     const socket = useRef<Socket | null> (null);
+    const [activeUsers, setActiveUsers ] = useState([]);
 
     
   
@@ -37,14 +39,40 @@ export default function Home() {
     }, [router]);
 
 React.useEffect(() => {socket.current = io("http://localhost:5000", {
-        transports: ['websocket'],});}, [])
+        transports: ['websocket'], reconnection:true,
+    reconnectionAttempts:5,
+    reconnectionDelay: 3000,
+    });}, [])
+
+    
 
 
     useEffect(() => {
         if(users.length > 0) {
             setChatUser(users[0])
         }
-    }, [users])
+        socket.current?.emit("addUser", user);
+        socket.current?.on("activeUsers", (users)=> {
+            if(user){
+                const filterUser = users.filter((u) => u.user.userId!==user.id);
+                setActiveUsers(filterUser);
+            }
+            
+        })
+
+    }, [users, user,socket])
+
+    useEffect(() => {
+        if(socket.current) {
+            socket.current?.on("getUsers", (users) => {
+                 if(user){
+                const filterUser = users.filter((u) => u.userId!==user.id);
+                setActiveUsers(filterUser);
+            }
+
+            } );
+        }
+    }, [socket, user]);
 
 
 
@@ -57,6 +85,8 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
         
       
     };
+    
+
     return (
         <div>
             <div className='p-[20px]'>
@@ -65,7 +95,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
                         <Sidebar user={user} />
                     </div>
                     <div className='w-[30%] h-[95vh] flex justify-center'>
-                        <Users users={users} chatUserHandler={chatUserHandler} />
+                        <Users users={users} activeUsers={activeUsers} chatUserHandler={chatUserHandler} />
 
                     </div>
                     <div className='w-[100%] h-[90vh] items-center flex justify-center'>
