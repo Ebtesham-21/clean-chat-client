@@ -18,10 +18,6 @@ const userSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        clearUser: (state) => {
-            state.user = null;
-            state.error = null;
-        }
     }
 })
 

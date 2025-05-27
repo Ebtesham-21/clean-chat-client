@@ -1,5 +1,6 @@
 'use client'
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query"
+import { setUsers } from "./features/userSlice";
 export const chatApi = createApi({
    reducerPath: 'chatApi',
    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000/api',
@@ -25,14 +26,40 @@ export const chatApi = createApi({
             url: "/auth/login",
             method: "POST",
             body: userData,
-         })
-      })
-   }),
-});
+         }),
+      }),
+      fetchUser: builder.query({
+         query:() =>"/users/user",
+         async onQueryStarted(arg, {dispatch, queryFulfilled})}{
+            try{
+               const {data} = await queryFulfilled;
+               console.log(data, "data")
+            }catch(error){
+               dispatch(setError(error))
+            }
+         },
+      }),
+      fetchUser:builder.query({
+         query:() => "/users",
+         async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+            try {
+               const {data} = await queryFulfilled;
+               dispatch(setUsers(data));
+            }
+            catch(err){
+               dispatch(setError(err))
+            }
+         },
+
+         
+      }),
+   });
+
 
 
 export const {
    useSignupMutation,
-   useLoginMutation
-} = chatApi
+   useLoginMutation,
+   useFetchUserQuery
+} = chatApi;
 
