@@ -1,6 +1,8 @@
 'use client'
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query"
 import { setUsers } from "./features/userSlice";
+import { setMessageError, setMessages } from "./features/messageSlice";
+import { set } from "react-hook-form";
 export const chatApi = createApi({
    reducerPath: 'chatApi',
    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000/api',
@@ -50,6 +52,19 @@ export const chatApi = createApi({
                dispatch(setError(err))
             }
          },
+
+         fetchMessagesBySenderId: builder.query({
+            query:(senderId) => `/messages/sender/${senderId}`,
+            async onQueryStarted(arg, {dispatch, queryFulfilled}) {
+               try{
+                  const {data} = await queryFulfilled;
+                  dispatch(setMessages(data));
+               } catch(error) {
+                  setMessageError(error)
+               }
+            }),
+         }),
+            
 
          
       }),

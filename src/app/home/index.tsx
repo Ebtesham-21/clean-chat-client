@@ -5,10 +5,11 @@ import Sidebar from '../ui/sidebar';
 import Users from '../ui/users';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFetchUserQuery, useFetchUsersQuery } from '@/lib/api';
 import {io, Socket} from 'socket.io-client';
 import { set } from 'react-hook-form';
+import { setUser, setUsers } from '@/lib/features/userSlice';
 
 export default function Home() {
     useFetchUserQuery("");
@@ -21,6 +22,8 @@ export default function Home() {
     const [chatUser, setChatUser ] = useState(users[0]);
     const socket = useRef<Socket | null> (null);
     const [activeUsers, setActiveUsers ] = useState([]);
+    
+    const dispatch = useDispatch();
 
     
   
@@ -53,6 +56,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
         }
         socket.current?.emit("addUser", user);
         socket.current?.on("activeUsers", (users)=> {
+            console.log(users, "users => broadcasting1");
             if(user){
                 const filterUser = users.filter((u) => u.user.userId!==user.id);
                 setActiveUsers(filterUser);
@@ -65,7 +69,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
     useEffect(() => {
         if(socket.current) {
             socket.current?.on("getUsers", (users) => {
-                 if(user){
+                if(user){
                 const filterUser = users.filter((u) => u.userId!==user.id);
                 setActiveUsers(filterUser);
             }
@@ -85,6 +89,19 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
         
       
     };
+
+    const handleLogout = async () => {
+        localStorage.removeItem("token");
+        router.push("/login");
+        dispatch(setUser(null));
+        dispatch(setUsers([]));
+        if(socket.current) {
+            socket.current.emit("logout", user?.id);
+            socket.current.disconnect();
+
+        }
+
+    }
     
 
     return (
@@ -92,7 +109,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
             <div className='p-[20px]'>
                 <div className='flex'>
                     <div className='w-[20%] flex justify-center'>
-                        <Sidebar user={user} />
+                        <Sidebar user={user} handleLogout={handleLogout} />
                     </div>
                     <div className='w-[30%] h-[95vh] flex justify-center'>
                         <Users users={users} activeUsers={activeUsers} chatUserHandler={chatUserHandler} />

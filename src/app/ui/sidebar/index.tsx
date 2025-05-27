@@ -4,16 +4,15 @@ import { LogoutButton } from '@/app/icons/icons';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
-const Sidebar = ({user}) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const handleLogout = async () => {
-   localStorage.removeItem("token");
-   router.push("/login")
-   dispatch(setUser(null))
+const Sidebar = ({user, handleLogout}:any) => {
+ 
+  // const handleLogout = async () => {
+  //  localStorage.removeItem("token");
+  //  router.push("/login")
+  //  dispatch(setUser(null))
 
 
-  };
+  // };
   return (
     <div className='w-[100px] h-[95vh] lg:flex flex-col bg-[#6E00FF] rounded-lg justify-between '>
             <div>

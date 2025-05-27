@@ -2,13 +2,14 @@
 import React from 'react'
 import {useForm} from "react-hook-form";
 import { useRouter } from 'next/navigation';
-import { useLoginMutation } from '@/lib/api';
+import { useLoginMutation, useFetchUsersQuery } from '@/lib/api';
 import {UserData} from '../../../types';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/lib/features/userSlice';
 
 const Login = () => {
 const [login, {isLoading}] = useLoginMutation();
+const {refetch}   = useFetchUsersQuery("");
 const dipatch = useDispatch();
 const router = useRouter();
 const {
@@ -26,6 +27,7 @@ const {
         const result = await login(data).unwrap();
         localStorage.setItem("token", result.token);
         dipatch(setUser(result.user));
+        refetch?.();
         reset();
         router.push("/");
 
