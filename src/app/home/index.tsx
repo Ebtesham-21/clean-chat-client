@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import Chat from '../ui/chat';
 import Sidebar from '../ui/sidebar';
 import Users from '../ui/users';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFetchUserQuery, useFetchUsersQuery } from '@/lib/api';
+import { useFetchMessagesBySenderIdQuery, useFetchUserQuery, useFetchUsersQuery } from '@/lib/api';
 import {io, Socket} from 'socket.io-client';
 import { set } from 'react-hook-form';
 import { setUser, setUsers } from '@/lib/features/userSlice';
@@ -14,14 +14,21 @@ import { setUser, setUsers } from '@/lib/features/userSlice';
 export default function Home() {
     useFetchUserQuery("");
     useFetchUsersQuery("");
+    
   
     const [loading, setLoading]=useState(true);
     const router = useRouter();
     const usersState = useSelector((state:any) => state.user);
+    const messagesState = useSelector((state:any) => state.message);
     const {users, user} = usersState;
+    const {messages} = messagesState;
     const [chatUser, setChatUser ] = useState(users[0]);
     const socket = useRef<Socket | null> (null);
     const [activeUsers, setActiveUsers ] = useState([]);
+    const {isLoading, refetch} = useFetchMessagesBySenderIdQuery(chatUser?.id, {
+        skip: !chatUser?.id
+
+    })
     
     const dispatch = useDispatch();
 
@@ -79,6 +86,11 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
     }, [socket, user]);
 
 
+    useEffect(() => {
+        if(chatUser?.id) {
+            refetch();
+        }
+    }, [chatUser, refetch]);
 
     if(loading) {
         return<div>Loading...</div>;
@@ -116,7 +128,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
 
                     </div>
                     <div className='w-[100%] h-[90vh] items-center flex justify-center'>
-                        <Chat chatUser={chatUser} />
+                        <Chat chatUser={chatUser} messages={messages} user={user} />
 
 
                     </div>

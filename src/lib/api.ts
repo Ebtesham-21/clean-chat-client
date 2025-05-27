@@ -58,11 +58,11 @@ export const chatApi = createApi({
             async onQueryStarted(arg, {dispatch, queryFulfilled}) {
                try{
                   const {data} = await queryFulfilled;
-                  dispatch(setMessages(data));
+                  dispatch(setMessages(data?.messages)); 
                } catch(error) {
                   setMessageError(error)
                }
-            }),
+            },
          }),
             
 
@@ -75,6 +75,8 @@ export const chatApi = createApi({
 export const {
    useSignupMutation,
    useLoginMutation,
-   useFetchUserQuery
+   useFetchUserQuery,
+   useFetchUsersQuery,
+   useFetchMessagesBySenderIdQuery,
 } = chatApi;
 

@@ -2,12 +2,12 @@
 import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 
-const Chat = ({chatUser}) => {
-  const user = {
-    id: "5",
-    name: "Zyx",
-    profileImage: "https://via.placeholder.com/150"
-  };
+const Chat = ({chatUser, user, messages}) => {
+
+
+
+
+  
 
   return (
     <div className='w-[90%] h-[80vh] rounded-lg shadow-md shadow-[#79c5ef] flex flex-col'>
@@ -29,33 +29,28 @@ const Chat = ({chatUser}) => {
           {/* <p className='text-sm text-gray-500'>Typing...</p> */}
         </div>
       </div>
+      <div className='flex flex-col h-full bg-white'>
+        {messages&& +messages?.length > 0 ?messages.map((msg:any, index:any) => 
+          
+            <div key={index} className='flex-1 overfolw-auto p-4 space-y-4'>
+              <div className={msg.send'flex justify-end'}>
+                <div className='bg-blue-500 text-white p-3 rounded-lg max-xs relative'>
+                  {msg?.content}
 
-      {/* Chat Messages */}
-      <div className='flex-1 overflow-y-auto p-4 space-y-4'>
-        <div className='flex justify-end'>
-          <div className='bg-blue-500 text-white p-3 rounded-lg relative'>
-            Hi!
-          </div>
+                </div>
+              </div>
+
+            </div>
+          
+
+
+        ):false}
         </div>
-        {/* Add more messages here */}
       </div>
 
-      {/* Message Input - sticks to bottom */}
-      <div className='p-4 bg-white border-t border-gray-300'>
-        <form className='flex items-center space-x-2'>
-          <input
-            className='flex-1 rounded-md focus:outline-none'
-            placeholder='Type a message...'
-          />
-          <button
-            type='submit'
-            className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'
-          >
-            Send
-          </button>
-        </form>
-      </div>
-    </div>
+   
+
+     
   );
 };
 
