@@ -32,11 +32,13 @@ const Users: React.FC<UsersProps> = ({ users, chatUserHandler, activeUsers }) =>
                 <div className="flex items-center space-x-4 relative">
                   {item.profileImage ? (
                     <div className="relative">
-                      <img
-                        className="h-10 w-10 rounded-full object-cover"
-                        src={item?.profileImage}
-                        alt={item?.name}
-                      />
+                    <img
+  className="h-10 w-10 rounded-full object-cover"
+  src={`${process.env.NEXT_PUBLIC_API_URL}${item.profileImage}`}
+  alt={item?.name}
+/>
+
+
                       {activeUsers?.some((u) => u.userId === item.id) ? (
                         <span className="top-0 left-7 absolute w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></span>
                       ) : null}

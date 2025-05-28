@@ -22,6 +22,9 @@ import { addMessages, addSocketMessage } from '@/lib/features/messageSlice';
 export default function Home() {
     useFetchUserQuery("");
     useFetchUsersQuery("");
+
+
+    
     
     const [addMessage, {isLoading: isSendingMessage} ] = useAddMessagesMutation()
     const [loading, setLoading]=useState(true);

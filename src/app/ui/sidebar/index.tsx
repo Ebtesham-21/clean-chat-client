@@ -24,10 +24,11 @@ const Sidebar: React.FC<SidebarProps> = ({ user, handleLogout }) => {
               <div>
                 <div className='relative'>
                   <img
-                    className='h-10 w-10 rounded-full object-cover'
-                    src={user.profileImage}
-                    alt={user.name}
-                  />
+  className="h-10 w-10 rounded-full object-cover"
+  src={`${process.env.NEXT_PUBLIC_API_URL}${user?.profileImage}`}
+  alt={user?.name}
+/>
+
                 </div>
                 <div>
                   <p className='text-white'>{user?.name}</p>
