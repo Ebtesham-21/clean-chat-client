@@ -80,7 +80,8 @@ socket.current.on("newMessage", (data:any) => {
         socket.current?.on("activeUsers", (users)=> {
             console.log(users, "users => broadcasting1");
             if(user){
-                const filterUser = users.filter((u) => u.user.userId!==user.id);
+                const filterUser = users.filter((u) => u.user && u.user.userId !== user?.id);
+
                 setActiveUsers(filterUser);
             }
             

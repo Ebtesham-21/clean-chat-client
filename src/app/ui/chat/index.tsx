@@ -72,19 +72,20 @@ const Chat = ({
       <div className='flex flex-col h-full bg-white'>
         <div className='flex-1 overflow-auto p-4 space-y-4'>
           {messages && messages.length > 0 ? (
-            messages.map((msg, index) => (
-              <div key={index} className='flex-1'>
-                <div className={msg.senderId === user.id ? 'flex justify-end' : 'flex justify-start'}>
-                  <div className={msg.senderId === user.id ? 'bg-blue-500 text-white p-3 rounded-lg relative' : 'bg-gray-300 text-gray-900 p-3 rounded-lg relative'}>
-                    {msg.content}
-                  </div>
-                  <span className='text-xs text-gray-500 ml-2 self-end'>
-                    {formatTime(msg.createdAt)}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : null}
+  messages.map((msg, index) => (
+    <div key={index} className='flex-1'>
+      <div className={(user && msg.senderId === user.id) ? 'flex justify-end' : 'flex justify-start'}>
+        <div className={(user && msg.senderId === user.id) ? 'bg-blue-500 text-white p-3 rounded-lg relative' : 'bg-gray-300 text-gray-900 p-3 rounded-lg relative'}>
+          {msg.content}
+        </div>
+        <span className='text-xs text-gray-500 ml-2 self-end'>
+          {formatTime(msg.createdAt)}
+        </span>
+      </div>
+    </div>
+  ))
+) : null}
+
           <div ref={messagesEndRef}></div>
         </div>
 
