@@ -52,18 +52,20 @@ const Chat = ({
       {/* Header */}
       <div className='flex items-center p-4 bg-gray-100 border-b border-gray-300'>
         {chatUser?.profileImage ? (
-          <img
-            src={chatUser.profileImage}
-            alt={chatUser.name}
-            className='h-10 w-10 rounded-full object-cover mr-3'
-          />
-        ) : (
-          <div className='h-10 w-10 flex items-center justify-center bg-blue-500 rounded-full text-white mr-3'>
-            {chatUser.name.charAt(0).toUpperCase()}
-          </div>
-        )}
+            <img
+              src={chatUser.profileImage}
+              alt={chatUser.name}
+              className='h-10 w-10 rounded-full object-cover mr-3'
+            />
+          ) : (
+            <div className='h-10 w-10 flex items-center justify-center bg-blue-500 rounded-full text-white mr-3'>
+              {chatUser?.name?.charAt(0)?.toUpperCase() || "?"}
+            </div>
+          )}
+
         <div>
-          <h2 className='text-lg font-semibold text-gray-800'>{chatUser.name}</h2>
+          <h2 className='text-lg font-semibold text-gray-800'>{chatUser?.name || 'Unknown User'}</h2>
+
         </div>
       </div>
 

@@ -111,7 +111,7 @@ socket.current.on("newMessage", (data:any) => {
         return<div>Loading...</div>;
     }
 
-    const chatUserHandler = (user:any) => {
+    const chatUserHandler = (user:User) => {
         setChatUser(user)
         
       
@@ -143,7 +143,7 @@ socket.current.on("newMessage", (data:any) => {
         senderId: user?.id,
         receiverId: chatUser?.id
     }
-    dispatch(addLocalMessage(data));
+    dispatch(addMessages(data));
     await addMessage(data).unwrap();
     setMessage("")
     if(socket.current){

@@ -1,83 +1,77 @@
 "use client";
-import React from 'react'
-import {useForm} from "react-hook-form";
+import React from 'react';
+import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 import { useLoginMutation, useFetchUsersQuery } from '@/lib/api';
-import {UserData} from '../../../types';
+import { UserData } from '../../../types';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/lib/features/userSlice';
 
 const Login = () => {
-const [login, {isLoading}] = useLoginMutation();
-const {refetch}   = useFetchUsersQuery("");
-const dipatch = useDispatch();
-const router = useRouter();
-const {
+  const [login] = useLoginMutation();
+  const { refetch } = useFetchUsersQuery("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState: {errors},
+    formState: { errors },
+  } = useForm<Pick<UserData, 'email' | 'password'>>(); // Only use necessary fields
 
-} = useForm();
-
-  const onSubmit = async(data:UserData) => {
-    try{
-    
-        const result = await login(data).unwrap();
-        localStorage.setItem("token", result.token);
-        dipatch(setUser(result.user));
-        refetch?.();
-        reset();
-        router.push("/");
-
+  const onSubmit = async (data: Pick<UserData, 'email' | 'password'>) => {
+    try {
+      const result = await login(data).unwrap();
+      localStorage.setItem("token", result.token);
+      dispatch(setUser(result.user));
+      refetch?.();
+      reset();
+      router.push("/");
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'data' in error) {
+        const err = error as { data?: { message?: string } };
+        alert(err?.data?.message || "Login Failed");
+      } else {
+        alert("Login Failed");
+      }
     }
-    
-    catch(error:any){
-        console.log(error?.data, "error");
-        alert(error?.data?.message || "Login Failed");
-    }
+  };
 
-
-  }
   return (
-   <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
-   
-    <div>
-        <label className='block text-sm font-medium text-gray-700 '>
-            Email
-        </label>
-        <input 
-        {...register("email")}
-        type="email" 
-        placeholder='email' 
-        className='w-full  px-4 py-2 mt-1 border  rounded-lg  focus:outline-none focus:ring-2 focus:ring-primary'
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          {...register("email", { required: "Email is required" })}
+          type="email"
+          placeholder="email"
+          className="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
-    </div>
-    <div>
-        <label className='block text-sm font-medium text-gray-700 '>
-            Password
-        </label>
-        <input 
-        type="password" 
-        placeholder='password' 
-        className='w-full  px-4 py-2 mt-1 border  rounded-lg  focus:outline-none focus:ring-2 focus:ring-primary'
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          {...register("password", { required: "Password is required" })}
+          type="password"
+          placeholder="password"
+          className="w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
-    </div>
-    
-    <div>
-       
-        <button type="submit" className='w-full py-2 mt-4 text-white bg-[#6e00ff] rounded-lg hover:bg-[#6e00cf] focus:outline-none'>
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+      </div>
 
-            Log In
-
+      <div>
+        <button
+          type="submit"
+          className="w-full py-2 mt-4 text-white bg-[#6e00ff] rounded-lg hover:bg-[#6e00cf] focus:outline-none"
+        >
+          Log In
         </button>
-    </div>
-       
-       
-      
-   </form>
-  )
-}
+      </div>
+    </form>
+  );
+};
 
-export default Login
+export default Login;
