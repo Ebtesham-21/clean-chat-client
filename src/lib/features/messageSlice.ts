@@ -14,13 +14,20 @@ const messageSlice = createSlice({
         addMessages: (state, action) => {
             state.messages.push(action.payload);
         },
+        addLocalMessage:(state, action) => {
+            state.messages.push(action.payload);
+        },
         setMessageError:(state, action) => {
             state.error = action.payload;
+        },
+        addSocketMessage:(state, action) => {
+             state.messages.push(action.payload);
+            
         }
     }
 });
 
-export const {setMessages, addMessages, setMessageError} = messageSlice.actions;
+export const {setMessages, addMessages, setMessageError, addSocketMessage} = messageSlice.actions;
 export default messageSlice.reducer;
 
 

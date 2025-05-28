@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import { useSignupMutation } from '@/lib/api';
 const Register = () => {
     const router = useRouter();
-    const [signup, {isLoading}]=useSignupMutation();
+    const [signup]=useSignupMutation();
     const {
         register,
         handleSubmit,
@@ -40,7 +40,7 @@ const Register = () => {
 
         
     }
-  }
+  
   return (
    <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
     <div>

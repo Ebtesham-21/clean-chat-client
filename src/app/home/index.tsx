@@ -1,21 +1,29 @@
 "use client";
-import React, { use, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Chat from '../ui/chat';
 import Sidebar from '../ui/sidebar';
 import Users from '../ui/users';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFetchMessagesBySenderIdQuery, useFetchUserQuery, useFetchUsersQuery } from '@/lib/api';
+import {
+  useAddMessagesMutation,
+  useFetchMessagesBySenderIdQuery,
+  useFetchUserQuery,
+  useFetchUsersQuery,
+} from '@/lib/api';
+
 import {io, Socket} from 'socket.io-client';
+
 import { set } from 'react-hook-form';
 import { setUser, setUsers } from '@/lib/features/userSlice';
+import { addMessages, addSocketMessage } from '@/lib/features/messageSlice';
 
 export default function Home() {
     useFetchUserQuery("");
     useFetchUsersQuery("");
     
-  
+    const [addMessage, {isLoading: isSendingMessage} ] = useAddMessagesMutation()
     const [loading, setLoading]=useState(true);
     const router = useRouter();
     const usersState = useSelector((state:any) => state.user);
@@ -23,9 +31,10 @@ export default function Home() {
     const {users, user} = usersState;
     const {messages} = messagesState;
     const [chatUser, setChatUser ] = useState(users[0]);
+    const [message, setMessage] = useState("");
     const socket = useRef<Socket | null> (null);
     const [activeUsers, setActiveUsers ] = useState([]);
-    const {isLoading, refetch} = useFetchMessagesBySenderIdQuery(chatUser?.id, {
+    const {isLoading: isMessagesLoading, refetch} = useFetchMessagesBySenderIdQuery(chatUser?.id, {
         skip: !chatUser?.id
 
     })
@@ -48,11 +57,17 @@ export default function Home() {
         }
     }, [router]);
 
-React.useEffect(() => {socket.current = io("http://localhost:5000", {
+useEffect(() => {socket.current = io("http://localhost:5000", {
         transports: ['websocket'], reconnection:true,
     reconnectionAttempts:5,
     reconnectionDelay: 3000,
-    });}, [])
+    });
+
+socket.current.on("newMessage", (data:any) => {
+    dispatch(addSocketMessage(data));
+})
+
+}, [])
 
     
 
@@ -113,9 +128,29 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
 
         }
 
+    };
+
+    const sendMessageHandler=async(event:any)=> {
+
+    event.preventDefault();
+    if(!message) {
+        return alert("add your message ");
+    }
+
+    const data = {
+        content:message,
+        createdAt: Date.now(),
+        senderId: user?.id,
+        receiverId: chatUser?.id
+    }
+    dispatch(addLocalMessage(data));
+    await addMessage(data).unwrap();
+    setMessage("")
+    if(socket.current){
+      socket.current.emit("sendMessage", data)  
     }
     
-
+}
     return (
         <div>
             <div className='p-[20px]'>
@@ -128,7 +163,7 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
 
                     </div>
                     <div className='w-[100%] h-[90vh] items-center flex justify-center'>
-                        <Chat chatUser={chatUser} messages={messages} user={user} />
+                        <Chat chatUser={chatUser} messages={messages} user={user} sendMessageHandler={sendMessageHandler} setMessage={setMessage} message={message}  />
 
 
                     </div>
@@ -137,5 +172,4 @@ React.useEffect(() => {socket.current = io("http://localhost:5000", {
 
             </div>
         </div>
-    );
-}
+    )}
