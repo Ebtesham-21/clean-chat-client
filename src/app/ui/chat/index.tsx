@@ -57,7 +57,7 @@ const Chat = ({
       <div className='flex items-center p-4 bg-gray-100 border-b border-gray-300'>
         {chatUser?.profileImage ? (
           <img
-            src={chatUser.profileImage}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${chatUser.profileImage}`}
             alt={chatUser.name}
             className='h-10 w-10 rounded-full object-cover mr-3'
           />
