@@ -20,7 +20,9 @@ import { setUser, setUsers } from '@/lib/features/userSlice';
 import { addMessages, addSocketMessage } from '@/lib/features/messageSlice';
 
 export default function Home() {
-    useFetchUserQuery("");
+    const { data: fetchedUser, isLoading: isUserLoading } = useFetchUserQuery("");
+   
+
     useFetchUsersQuery("");
 
 
@@ -47,7 +49,11 @@ export default function Home() {
     
   
    
-
+    useEffect(() => {
+        if(fetchedUser){
+            dispatch(setUser(fetchedUser));
+        }
+    }, [fetchedUser, dispatch]);
 
 
     useEffect(() => {
@@ -111,9 +117,10 @@ socket.current.on("newMessage", (data:any) => {
         }
     }, [chatUser, refetch]);
 
-    if(loading) {
-        return<div>Loading...</div>;
-    }
+    if (loading || isUserLoading) {
+  return <div>Loading...</div>;
+}
+
 
     const chatUserHandler = (user:User) => {
         setChatUser(user)

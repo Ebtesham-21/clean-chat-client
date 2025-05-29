@@ -32,41 +32,50 @@ export const chatApi = createApi({
       }),
     }),
 
-    fetchUser: builder.query({
-      query: () => "/users/user",
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log(data, "user data");
-        } catch (error) {
-          dispatch(setMessageError(error));
-        }
-      },
-    }),
+fetchUser: builder.query({
+  query: () => "/users/user",
+  async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    try {
+      const { data } = await queryFulfilled;
+      console.log(data, "user data");
+    } catch (error: any) {
+      const errorMessage = error?.error || error?.data?.message || "Failed to fetch user";
+      dispatch(setMessageError(errorMessage));
+    }
+  },
+}),
 
-    fetchUsers: builder.query({
-      query: () => "/users",
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setUsers(data));
-        } catch (err) {
-          dispatch(setMessageError(err));
-        }
-      },
-    }),
 
-    fetchMessagesBySenderId: builder.query({
-      query: (senderId) => `/messages/sender/${senderId}`,
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setMessages(data?.messages));
-        } catch (error) {
-          dispatch(setMessageError(error));
-        }
-      },
-    }),
+
+fetchUsers: builder.query({
+  query: () => "/users",
+  async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    try {
+      const { data } = await queryFulfilled;
+      dispatch(setUsers(data));
+    } catch (error: any) {
+      const errorMessage = error?.error || error?.data?.message || "Failed to fetch users";
+      dispatch(setMessageError(errorMessage));
+    }
+  },
+}),
+
+
+
+fetchMessagesBySenderId: builder.query({
+  query: (senderId) => `/messages/sender/${senderId}`,
+  async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    try {
+      const { data } = await queryFulfilled;
+      dispatch(setMessages(data?.messages));
+    } catch (error: any) {
+      const errorMessage = error?.error || error?.data?.message || "Failed to fetch messages";
+      dispatch(setMessageError(errorMessage));
+    }
+  },
+}),
+
+
 
     addMessages: builder.mutation({
       query: (data) => ({
