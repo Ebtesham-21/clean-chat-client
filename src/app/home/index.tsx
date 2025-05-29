@@ -39,10 +39,13 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const socket = useRef<Socket | null> (null);
     const [activeUsers, setActiveUsers ] = useState([]);
-    const {isLoading: isMessagesLoading, refetch} = useFetchMessagesBySenderIdQuery(chatUser?.id, {
-        skip: !chatUser?.id
+    const senderId = chatUser?.id;
 
-    })
+// Only trigger if `senderId` is valid and non-undefined
+const { isLoading: isMessagesLoading, refetch } = useFetchMessagesBySenderIdQuery(senderId ?? "", {
+  skip: !senderId
+});
+
     
     const dispatch = useDispatch();
 
@@ -76,7 +79,7 @@ socket.current.on("newMessage", (data:any) => {
     dispatch(addSocketMessage(data));
 })
 
-}, [])
+}, [dispatch])
 
     
 
@@ -117,9 +120,14 @@ socket.current.on("newMessage", (data:any) => {
         }
     }, [chatUser, refetch]);
 
-    if (loading || isUserLoading) {
+if (loading || isUserLoading ) {
   return <div>Loading...</div>;
 }
+
+// if (loading || isUserLoading || !user ) {
+//   return <div>Loading...</div>;
+// }
+
 
 
     const chatUserHandler = (user:User) => {
@@ -174,7 +182,19 @@ socket.current.on("newMessage", (data:any) => {
 
                     </div>
                     <div className='w-[100%] h-[90vh] items-center flex justify-center'>
-                        <Chat chatUser={chatUser} messages={messages} user={user} sendMessageHandler={sendMessageHandler} setMessage={setMessage} message={message}  />
+                       {isMessagesLoading ? (
+                        <div className="text-center text-gray-500">Loading messages...</div>
+                        ) : (
+                        <Chat
+                            chatUser={chatUser}
+                            messages={messages}
+                            user={user}
+                            sendMessageHandler={sendMessageHandler}
+                            setMessage={setMessage}
+                            message={message}
+                        />
+                        )}
+
 
 
                     </div>

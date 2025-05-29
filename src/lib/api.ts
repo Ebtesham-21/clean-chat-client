@@ -63,11 +63,12 @@ fetchUsers: builder.query({
 
 
 fetchMessagesBySenderId: builder.query({
-  query: (senderId) => `/messages/sender/${senderId}`,
+  query: (senderId) => `/messages?senderId=${senderId}`, // ✅ fix here
+  providesTags: ['Messages'],
   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
     try {
       const { data } = await queryFulfilled;
-      dispatch(setMessages(data?.messages));
+      dispatch(setMessages(data));
     } catch (error: any) {
       const errorMessage = error?.error || error?.data?.message || "Failed to fetch messages";
       dispatch(setMessageError(errorMessage));
@@ -75,15 +76,14 @@ fetchMessagesBySenderId: builder.query({
   },
 }),
 
+addMessages: builder.mutation({
+  query: (data) => ({
+    url: "/messages/create", // ✅ fix here
+    method: 'POST',
+    body: data,
+  }),
+}),
 
-
-    addMessages: builder.mutation({
-      query: (data) => ({
-        url: "/message/create",
-        method: 'POST',
-        body: data,
-      }),
-    }),
   }),
 });
 
