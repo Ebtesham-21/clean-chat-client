@@ -45,8 +45,8 @@ const Users: React.FC<UsersProps> = ({ users, chatUserHandler, activeUsers }) =>
                     </div>
                   ) : (
                     <div className="relative">
-                      <div className="h-10 w-10 items-center flex justify-center bg-blue-500 rounded-full text-white">
-                        <div>{item?.name?.charAt(0).toUpperCase()}</div>
+                      <div className="h-10 w-10 items-center flex justify-center bg-blue-500 rounded-full text-black">
+                        <div>{item?.name ? item.name.charAt(0).toUpperCase() : '?'}</div>
                       </div>
                     </div>
                   )}
